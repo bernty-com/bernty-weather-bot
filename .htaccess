@@ -1,0 +1,12 @@
+AddDefaultCharset utf-8
+AddHandler wsgi-script .py
+AddType "application/x-x509-ca-cert" .pem
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /bernty/wsgi.py/$1 [QSA,L]
+
+RewriteEngine on
+RewriteCond %{HTTP:HTTPS} !=on [NC]
+RewriteRule ^(.*)$ https://bernty.ru/$1 [R=301,L]
+SetEnvIf X-Forwarded-Proto https HTTPS=on
+

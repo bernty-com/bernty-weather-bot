@@ -1,0 +1,30 @@
+{% extends 'weather/base.html' %}
+{% block content %}
+<form action="{% url 'city_list' %}" method="GET" class="form-inline">
+<div class="row">
+  <div class="col-lg-6">
+    Ты с какого горада?<br />
+    <div class="input-group">
+      <input type="text" class="form-control" name="city">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
+</form>
+<br />
+
+{% if city_lists %}
+<div class="panel panel-primary">
+    <div class="panel-heading"><h4>Результаты поиска</h4></div>
+        <ul class="list-group">
+        {% for c in city_lists %}
+            <li class="list-group-item"><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% load bootstrap3 %}
+    {% bootstrap_pagination city_lists url=last_city %}
+{% endif %}
+{% endblock %}
