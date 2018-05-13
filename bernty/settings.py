@@ -18,10 +18,7 @@ import environ # pip install django-environ
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = environ.Path(__file__) - 3 # three folder back (/a/b/c/ - 3 = /)
 APPS_DIR = ROOT_DIR.path('public_html')
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
+ENV_DIR = str(APPS_DIR('bernty'))
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/staticfiles/'
@@ -32,36 +29,40 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_ROOT = '/home/b/berntyru/public_html/media'
+MEDIA_ROOT = str(APPS_DIR('media'))
+
+# Указываем тип переменных и значение по умолчанию, если переменная не инициализирована в .env-файле.  
+
+env = environ.Env(
+    SECRET_KEY=str,
+    DEBUG=(bool, False),
+    DATABASE_URL=str,
+    ALLOWED_HOSTS = (list,['bernty.ru']),
+    KKA_TEST=(str,'No test'),
+)
 
 environ.Env.read_env() # reading .env file
 
-#env = environ.Env(
-#    SECRET_KEY=str,
-#    DEBUG=(bool, False),
-#    ALLOWED_HOSTS=(list, ['127.0.0.1:8000']),
-#    DATABASE_URL=str,
-#)
+DEBUG = env('DEBUG')
 
-env = environ.Env(DEBUG=(bool, False),) # set default values and casting
-DEBUG = env('DEBUG') # False if not in os.environ
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
-
-# SECURITY WARNING: locally var stored in ~/.bash_profile
-SECRET_KEY = env('SECRET_KEY') # Raises ImproperlyConfigured exception if SECRET_KEY not in os.environ
-#os.environ.get('SECRET_KEY','wft317e_vktxe+s-s!t+@_=)f%f$utmr)9dquocaht#^6(-x^d')
+SECRET_KEY = env('SECRET_KEY')
+#os.environ.get('SECRET_KEY','my-secret-key-here')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = bool(os.environ.get('DJANGO_DEBUG', True) )
-ALLOWED_HOSTS = ['bernty.ru','localhost','127.0.0.1']
-ADMINS= [('John', 'leonard.schmidt.com@gmail.com')]
+
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
+if DEBUG:
+    ALLOWED_HOSTS += ['localhost','127.0.0.1']
+
+ADMINS = env('ADMINS')
 
 # Telegram Bot setting
 TELEGRAM_BOT_HANDLERS_CONF = "berntybot.bot_handlers"
 TELEGRAM_BOT_TOKEN_EXPIRATION = "2" # tow hours before a token expires
 SITE_ID=1 # bernty.ru
+KKA_TEST = env('KKA_TEST')
 
 LOGGING = {
     'version': 1,
@@ -85,19 +86,46 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
+        
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': str(APPS_DIR)  + '/log/debug.log',
+# '/Users/KKA/Dropbox/Site/2018.bernty.ru/public_html/log/debug.log',
+        },
     },     
     'loggers': {
-        'telegrambot.views': {
+        'telegrambot': {
             'handlers': ['console'],
-            'propagate': False,
             'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mail_admins', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['file','console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'py.warnings': {
+            'handlers': ['file','console'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
     }   
 }
 
 
 # Application definition
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -105,14 +133,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+]
+
+THIRD_PARTY_APPS = [
     'bootstrap3', # design
     'accounts.apps.AccountsConfig',
-    'weather', # my current app
     'telegrambot',
     'rest_framework',
-    'berntybot',
-
 ]
+LOCAL_APPS = [
+    'weather', # my current app
+    'berntybot',
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -151,36 +185,14 @@ WSGI_APPLICATION = 'bernty.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 #POSTGRES
-
 DATABASES = {
-    'default': env.db('DATABASE_URL') # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-#    'extra': env.db('SQLITE_URL', default='sqlite:////tmp/my-tmp-sqlite.db')
+    'default': env.db('DATABASE_URL'), 
+    # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
+    'local': env.db('LOCAL_URL')
 }
 
-#DATABASES = {
-#    "local": {
-#        "ENGINE": "django.db.backends.postgresql_psycopg2",
-#        "NAME": "KKA",
-#        "USER": "KKA",
-#        "PASSWORD": "",
-#        "HOST": "localhost",
-#        "PORT": "",
-#        },
-#    "default": {
-#        "ENGINE": "django.db.backends.postgresql_psycopg2",
-#        "NAME": "berntyru",
-#        "USER": "berntyru",
-#        "PASSWORD": "WUbuAT2xHd",
-#        "HOST": "pg.sweb.ru",
-#        "PORT": "5432",
-#        "OPTIONS": {
-#            "client_encoding": "UTF8"
-#        },
-#    }
-#}
-
 import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500, ssl_require=True)
+db_from_env = dj_database_url.config(conn_max_age=500, ssl_require=False)
 DATABASES['default'].update(db_from_env)
 
 
