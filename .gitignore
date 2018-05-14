@@ -3,10 +3,8 @@
 *.sql
 *.dump
 */__pycache__/*
-myvenv
-/static
 .gitignore
 .DS_Store
 .env
 .htaccess
-
+debug.log
