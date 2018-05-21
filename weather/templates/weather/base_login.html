@@ -1,0 +1,42 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap3 %}
+    <script src="{% bootstrap_jquery_url %}"></script>
+    {% bootstrap_javascript %}
+    {% bootstrap_css %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bernty Project</title>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <ul class="nav nav-pills pull-right">
+                <li class="active"><a href="/">Home</a></li>
+                {% if auth.user.is_authenticated %}
+                <li><a href="{% url 'accounts:logout' %}">Log Out</a></li>
+                {% else %}
+                <li><a href="{% url 'accounts:login' %}">Sign In</a></li>
+                {% endif %}
+            </ul>
+            <h3><a class="text-muted" href="/">The Bernty Project</a></h3>
+        </div>
+        <div class="container text-right">
+            {% if auth.user.is_authenticated %}
+            <p>Welcome, {{ auth.user.username }}. Thanks for logging in.</p>
+            {% else %}
+            <p>Welcome, new user. Please log in.</p>
+            {% endif %}
+        
+        </div>
+        <div class="content jumbotron container">
+                {% block content %}
+                {% endblock %}
+        </div>
+        <div class="page-footer">
+            <p> Walenok Продакшн цэ 2018</p>
+        </div>
+    </div>
+</body>
+</html>

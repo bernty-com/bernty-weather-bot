@@ -2,15 +2,16 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
+from django.utils.encoding import smart_text
 
 from .models import Country, City
+
 
 class HemisphereFilter(admin.SimpleListFilter):
     # Human-readable title which will be displayed in the
     # right admin sidebar just above the filter options.
-#    title = 'Полушарие Земли'
-    title = _('The hemisphere of the Earth')
+    title = smart_text('Полушарие Земли')
+#    title = _('The hemisphere of the Earth')
 
     # Parameter for the filter that will be used in the URL query.
     parameter_name = 'hemisphere'
@@ -25,8 +26,8 @@ class HemisphereFilter(admin.SimpleListFilter):
         in the right sidebar.
         """
         return (
-            ('East', _('East hemisphere')),
-            ('West', _('West hemisphere')),
+            ('East', smart_text('Восточное')),
+            ('West', smart_text('Западное')),
         )
 
     def queryset(self, request, queryset):
@@ -43,19 +44,36 @@ class HemisphereFilter(admin.SimpleListFilter):
             return queryset.filter(coord_lon__lte=0)
 
 
+class CountryFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+#    title = 'Полушарие Земли'
+    title = _('My country')
+    parameter_name = 'my_country'
+    
+    def lookups(self, request, model_admin):
+        return (
+            ('RU', _('Russia')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'RU':
+            return queryset.filter(country='RU')
+
+
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('brief', 'name')
     list_editable = ['name']
     search_fields = ['brief', 'name']
  
 class CityAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country','coord_lon','coord_lat')
+    list_display = ('name', 'local_name', 'country', 'coord_lon', 'coord_lat')
     fieldsets = [
-        (None,               {'fields': ['name','country']}),
+        (None, {'fields': ['name','local_name','country']}),
         ('Координаты', {'fields': [('coord_lon','coord_lat')]}),
     ]
-    search_fields = ['name']
-    list_filter = (HemisphereFilter,'country',)
+    search_fields = ['name','local_name']
+    list_filter = (HemisphereFilter, CountryFilter, 'country')
     
     
     def view_country(self, obj):
