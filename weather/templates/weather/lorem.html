@@ -1,1 +1,1 @@
-{% extends 'weather/base.html' %}{% load bootstrap3 %}{% load static %}{% block content %}    {% lorem 1 p %}{% endblock %}
+{% extends 'weather/base.html' %}{% load bootstrap3 %}{% load static %}{% block content %}    {% lorem 1 p %}    {% if not user.is_authenticated %}        <div class="container text-center">            <a href="{% url 'accounts:login'%}" class="btn btn-primary btn-xl page-scroll">Войти</a>    </div>    {% endif %} {% endblock %}

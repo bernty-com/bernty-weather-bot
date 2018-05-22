@@ -6,7 +6,7 @@
 <div class="panel panel-primary">
     <div class="panel-heading"><h4>Ты с какова горада?</h4></div>
         <ul class="list-group">
-        {% for c in city_lists %}
+        {% for c in object_list %}
             <li class="list-group-item">
                 <a href="{{ c.get_absolute_url }}">
                     {% if c.local_name %}
@@ -21,11 +21,8 @@
         {% endfor %}
         </ul>
     </div>
-    {% if needPaginator %}
-        {% bootstrap_pagination city_lists url=last_city %}
-    {% endif %}
+    {% bootstrap_pagination page_obj %}
 {% else %}
-    <span>city list</span>
-    {% lorem 1 p %}
+    <span>{% lorem 1 p %}</span>
 {% endif %}
 {% endblock %}

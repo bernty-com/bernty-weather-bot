@@ -18,6 +18,7 @@ class ELoginView(View):
     def get(self, request):
         # если пользователь авторизован, то делаем редирект на главную страницу
         if auth.get_user(request).is_authenticated:
+            next = urlparse(get_next_url(request)).path
             return redirect('/')
         else:
             # Иначе формируем контекст с формой авторизации и отдаём страницу 

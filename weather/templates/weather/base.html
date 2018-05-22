@@ -12,43 +12,33 @@
 <body>
     <div class="container">
         <div class="page-header">
+            {% if user.is_authenticated %}
             <ul class="nav nav-pills pull-right">
-                {% if user.is_authenticated %}
                 <li class="active"><a href="{% url 'accounts:logout'%}">Logout</a></li>
-                {% else %}
-                <li class="active"><a href="{% url 'accounts:login'%}">Login</a></li>
-                {% endif %} 
             </ul>
-            <h3><a class="text-muted" href="/">The Bernty Project</a></h3>
+            {% endif %} 
+            <h3><a class="text-muted" href="{% url 'index'%}">The Bernty Project</a></h3>
         </div>
+        {% if user.is_authenticated %}
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-left">
                     {% include 'weather/find_city.html' %}
                 </div> <!-- col-md-6 text-left -->
                 <div class="col-md-6 text-right">
-                    {% if request.user.is_authenticated %}
-                        <span>Привет, {{ request.user.get_short_name }}<br />
-                        You have visited this page {{ request.session.num_visits }}
-                            {% if request.session.num_visits == 1 %} 
-                                time
-                            {% else %} 
-                                times
-                            {% endif %}
+                        <span>
+                        Привет, {{ user.get_short_name }}<br />
+                        {% if request.session.num_visits == 1 %} 
+                            Ты приперся в {{ request.session.num_visits }} раз
+                        {% else %} 
+                            Ты приперся уже в {{ request.session.num_visits }} раз
+                        {% endif %}
                         </span>
-                    {% else %}
-                    <span>Пользователь не авторизован</span><br />
-                         You have visited this page {{ request.session.num_visits }}
-                            {% if request.session.num_visits == 1 %} 
-                                time
-                            {% else %} 
-                                times
-                            {% endif %}
-                   {% endif %} 
                 </div> <!-- col-md-6 text-right -->
-            </div>
+            </div> <!-- row -->
         </div> <!-- container -->
         <hr>
+        {% endif %} 
         <div class="content jumbotron container">
             {% block content %}
             {% endblock %}
