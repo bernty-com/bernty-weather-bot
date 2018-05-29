@@ -2,13 +2,14 @@
 
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.template import Context
 from django.utils.encoding import python_2_unicode_compatible
 
 import json, requests, datetime
 
 from .model_func import day_duration, set_pressure, set_wind_direction, natural_time, coordinate, set_condition
 
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
 @python_2_unicode_compatible  # only if you need to support Python 2
 class Country(models.Model):
@@ -150,3 +151,23 @@ class Forecast(models.Model):
         self.city_id = d['id']
         self.name = d['name']
         self.country = d['sys'].get('country')
+        
+class FavoriteCity(models.Model):
+    #Fields
+    favorite_id = models.AutoField(primary_key=True, verbose_name="ID")
+    city = models.ForeignKey('City', on_delete=models.CASCADE, verbose_name="Город")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь")
+    datetime_added = models.DateTimeField(auto_now_add=True) 
+        
+    class Meta:
+        verbose_name = "Избранный город"
+        verbose_name_plural = "Избранные города"
+    
+    def get(self, city_id, user_id):
+        return self.objects.filter(city__exact=city_id,user__exact=user_id)
+    
+    def add(self,city, user):
+        response = self.objects.create(city=city, user=user)
+
+    
+

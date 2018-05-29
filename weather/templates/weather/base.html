@@ -17,7 +17,7 @@
                 <li class="active"><a href="{% url 'accounts:logout'%}">Logout</a></li>
             </ul>
             {% endif %} 
-            <h3><a class="text-muted" href="{% url 'index'%}">The Bernty Project</a></h3>
+            <h3><a class="text-muted" href="{% url 'index'%}" style="text-decoration: none;">The Bernty Project</a></h3>
         </div>
         {% if user.is_authenticated %}
         <div class="container">
@@ -27,11 +27,11 @@
                 </div> <!-- col-md-6 text-left -->
                 <div class="col-md-6 text-right">
                         <span>
-                        Привет, {{ user.get_short_name }}<br />
+                        Привет, {{ user.get_short_name }},<br />
                         {% if request.session.num_visits == 1 %} 
-                            Ты приперся в {{ request.session.num_visits }} раз
+                            ты приперся в {{ request.session.num_visits }} раз
                         {% else %} 
-                            Ты приперся уже в {{ request.session.num_visits }} раз
+                            ты приперся уже в {{ request.session.num_visits }} раз
                         {% endif %}
                         </span>
                 </div> <!-- col-md-6 text-right -->

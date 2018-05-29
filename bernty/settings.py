@@ -44,7 +44,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 if DEBUG:
-    ALLOWED_HOSTS += ['localhost','127.0.0.1']
+    ALLOWED_HOSTS += ['localhost','127.0.0.1','testserver']
 
 ADMINS = env('ADMINS')
 
@@ -96,7 +96,7 @@ LOGGING = {
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['mail_admins', 'console'],
+            'handlers': ['file', 'console'],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -178,12 +178,15 @@ WSGI_APPLICATION = 'bernty.wsgi.application'
 DATABASES = {
     'default': env.db('DATABASE_URL'), 
     # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-    'local': env.db('LOCAL_URL')
+    #'remote': env.db('REMOTE_URL')
 }
 
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500, ssl_require=False)
 DATABASES['default'].update(db_from_env)
+
+test = {'TEST':{'NAME':'test_KKA'}}
+#DATABASES['default'].update(test)
 
 
 # Password validation

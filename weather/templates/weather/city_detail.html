@@ -6,9 +6,18 @@
     <div class="col-md-6 text-left">
     </div> <!-- col-md-6 text-left -->
     <div class="col-md-6 text-right">
+        <a href="{% url 'favorite-city-func' city.city_id %}">
         <button type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-heart-empty"></span>&nbsp;Добавить в избранное
+            {% if is_favorited %}
+                <span class="glyphicon glyphicon-heart"></span>
+                &nbsp;Удалить из избранного
+            {% else %}
+                <span class="glyphicon glyphicon-heart-empty"></span>
+                &nbsp;Добавить в избранное
+            {% endif %}
+            
         </button>
+        </a>
     </div> <!-- col-md-6 text-right -->
 </div> <!-- row -->
 <h1>{% if city.local_name %}
@@ -28,8 +37,7 @@
 </div> <!-- row -->
 <div class="row marketing">
     <div class="col-lg-6">
-        <h4>восход</h4><p>{{fc.sys_sunrise|date:"H:i"}}</p>
-        <h4>закат</h4><p>{{fc.sys_sunset|date:"H:i"}}</p>
+        <h4>восход&mdash;закат</h4><p>{{fc.sys_sunrise|date:"H:i"}}&mdash;{{fc.sys_sunset|date:"H:i"}}</p>
         <h4>долгота дня</h4><p>{{fc.duration}}</p>
         <h4>координаты</h4><p><a 
              href="http://maps.google.com/maps?q={{fc.coord_lat}},{{fc.coord_lon}}  ">{{fc.lat}}&nbsp;&nbsp;{{fc.lon}}</a></p>

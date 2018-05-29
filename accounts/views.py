@@ -15,7 +15,7 @@ from .special_func import get_next_url
 class ELoginView(View):
     context_object_name = 'login'
  
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         # если пользователь авторизован, то делаем редирект на главную страницу
         if auth.get_user(request).is_authenticated:
             next = urlparse(get_next_url(request)).path

@@ -21,8 +21,17 @@
         {% endfor %}
         </ul>
     </div>
-    {% bootstrap_pagination page_obj %}
+    {%if is_paginated %}
+        {% comment %}
+        Ниже некий хак с передачей GET параметров через paginator и bootstrap-3.
+        extra=request.GET.urlencode
+        Иначе теряется фильтр по маске выбора города.
+        {% endcomment %}
+        {% bootstrap_pagination page_obj extra=request.GET.urlencode %}
+    {% endif %}
 {% else %}
-    <span>{% lorem 1 p %}</span>
+    <div class="">
+        <span>Не найдено ни одного города. Тщательнее надо!</span>
+    </div>
 {% endif %}
 {% endblock %}
