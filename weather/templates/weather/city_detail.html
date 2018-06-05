@@ -3,56 +3,58 @@
 {% load static %}
 {% block content %}
 <div class="row">
-    <div class="col-md-6 text-left">
-    </div> <!-- col-md-6 text-left -->
-    <div class="col-md-6 text-right">
-        <a href="{% url 'favorite-city-func' city.city_id %}">
-        <button type="button" class="btn btn-default">
-            {% if is_favorited %}
-                <span class="glyphicon glyphicon-heart"></span>
-                &nbsp;Удалить из избранного
-            {% else %}
-                <span class="glyphicon glyphicon-heart-empty"></span>
-                &nbsp;Добавить в избранное
-            {% endif %}
-            
-        </button>
-        </a>
-    </div> <!-- col-md-6 text-right -->
+  <div class="col-md-6 text-left">
+  </div> <!-- col-md-6 text-left -->
+  <div class="col-md-6 text-right">
+    <a href="{% url 'favorite-city-func' city.city_id %}">
+      <button type="button" class="btn btn-default">
+        {% if is_favorited %}
+          <span class="glyphicon glyphicon-heart"></span>
+            &nbsp;Удалить из избранного
+        {% else %}
+          <span class="glyphicon glyphicon-heart-empty"></span>
+            &nbsp;Добавить в избранное
+        {% endif %}
+      </button>
+    </a>
+  </div> <!-- col-md-6 text-right -->
 </div> <!-- row -->
-<h1>{% if city.local_name %}
-        {{ city.local_name }}
-    {% else %}
-        {{ city.name }}
-    {% endif %}
-    <br>
-    <small>{{city.country}}</small>
+<h1>
+  {% if city.local_name %}{{ city.local_name }}{% else %}{{ city.name }}{% endif %}
+  <br>
+  <small>{{city.country}}</small>
 </h1>
 <div class="row">
-    <div class="col-xs-12 col-md-12">
-        <h2><img src="{% static 'icon/'%}{{ fc.weather_icon }}" />&nbsp;{{fc.temperature|floatformat:0}}&deg;&nbsp;&nbsp;{{fc.condition}}</h2> 
-    </div> <!-- col-xs-12 col-md-12 -->
-    <br/>
-    <br/>
+  <div class="col-xs-12 col-md-12">
+    <h2><img src="{% static 'icon/'%}{{ fc.weather_icon }}" />&nbsp;{{fc.temperature|floatformat:0}}&deg;&nbsp;&nbsp;{{fc.condition}}</h2> 
+  </div> <!-- col-xs-12 col-md-12 -->
+  <br/>
+  <br/>
 </div> <!-- row -->
 <div class="row marketing">
-    <div class="col-lg-6">
-        <h4>восход&mdash;закат</h4><p>{{fc.sys_sunrise|date:"H:i"}}&mdash;{{fc.sys_sunset|date:"H:i"}}</p>
-        <h4>долгота дня</h4><p>{{fc.duration}}</p>
-        <h4>координаты</h4><p><a 
-             href="http://maps.google.com/maps?q={{fc.coord_lat}},{{fc.coord_lon}}  ">{{fc.lat}}&nbsp;&nbsp;{{fc.lon}}</a></p>
-    </div> <!-- col-lg-6 -->
-    <div class="col-lg-6">
-        <h4>ветер</h4>
-        <p>{{fc.wind_direction}}&nbsp;{{fc.wind_speed|floatformat:0}} м/с</p>
-        <h4>влажность</h4><p>{{fc.humidity}}%</p>
-        <h4>давление</h4><p>{{fc.pressure}} мм рт.ст.</p>
-        <h4>облачность</h4><p>{{fc.clouds_all}}%</p>
-        {% if fc.temp_min and fc.temp_max and fc.temp_min != fc.temp_max%}
-            <h4>мин-maкс</h4>
-            <p><sub>min</sub>{{fc.temp_min}}&deg;&mdash; <sup>max</sup>{{fc.temp_max}}&deg;</p>
-        {% endif%}
-    </div> <!-- col-lg-6 -->
+  <div class="col-lg-6">
+    <h4>восход&mdash;закат</h4>
+    <p>{{fc.sys_sunrise|date:"H:i"}}&mdash;{{fc.sys_sunset|date:"H:i"}}</p>
+    <h4>долгота дня</h4>
+    <p>{{fc.duration}}</p>
+    <h4>координаты</h4>
+    <p><a 
+             href="http://maps.google.com/maps?q={{fc.coord_lat}},{{fc.coord_lon}}  ">{{fc.lat}}<br>{{fc.lon}}</a></p>
+  </div> <!-- col-lg-6 -->
+  <div class="col-lg-6">
+    <h4>ветер</h4>
+    <p>{{fc.wind_direction}},&nbsp;{{fc.wind_speed|floatformat:0}} м/с</p>
+    <h4>влажность</h4>
+    <p>{{fc.humidity}}%</p>
+    <h4>давление</h4>
+    <p>{{fc.pressure}} мм рт.ст.</p>
+    <h4>облачность</h4>
+    <p>{{fc.clouds_all}}%</p>
+    {% if fc.temp_min and fc.temp_max and fc.temp_min != fc.temp_max%}
+      <h4>мин-maкс</h4>
+      <p><sub>min</sub>{{fc.temp_min}}&deg;&mdash; <sup>max</sup>{{fc.temp_max}}&deg;</p>
+    {% endif%}
+  </div> <!-- col-lg-6 -->
 </div> <!-- row marketing -->
 <br/>
 <br/>

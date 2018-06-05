@@ -2,50 +2,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load bootstrap3 %}
-    <script src="{% bootstrap_jquery_url %}"></script>
-    {% bootstrap_javascript %}
-    {% bootstrap_css %}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Bernty Project</title>
+  {% load bootstrap3 %}
+  <script src="{% bootstrap_jquery_url %}"></script>
+  {% bootstrap_javascript %}
+  {% bootstrap_css %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Bernty Project</title>
 </head>
 <body>
-    <div class="container">
-        <div class="page-header">
-            {% if user.is_authenticated %}
-            <ul class="nav nav-pills pull-right">
-                <li class="active"><a href="{% url 'accounts:logout'%}">Logout</a></li>
-            </ul>
-            {% endif %} 
-            <h3><a class="text-muted" href="{% url 'index'%}" style="text-decoration: none;">The Bernty Project</a></h3>
-        </div>
+  <div class="container">
+    <div class="page-header">
+      <ul class="nav nav-pills pull-right">
         {% if user.is_authenticated %}
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-left">
-                    {% include 'weather/find_city.html' %}
-                </div> <!-- col-md-6 text-left -->
-                <div class="col-md-6 text-right">
-                        <span>
-                        Привет, {{ user.get_short_name }},<br />
-                        {% if request.session.num_visits == 1 %} 
-                            ты приперся в {{ request.session.num_visits }} раз
-                        {% else %} 
-                            ты приперся уже в {{ request.session.num_visits }} раз
-                        {% endif %}
-                        </span>
-                </div> <!-- col-md-6 text-right -->
-            </div> <!-- row -->
-        </div> <!-- container -->
-        <hr>
+        <li class=""><a href="{% url 'accounts:profile'%}">Профиль</a></li>
+        <li class="active"><a href="{% url 'accounts:logout'%}">Выйти</a></li>
+        {% else %}
+        <li class="active"><a href="{% url 'accounts:signup'%}">Регистрация</a></li>
         {% endif %} 
-        <div class="content jumbotron container">
-            {% block content %}
-            {% endblock %}
-        </div>
-        <div class="page-footer">
-            Walenok Продакшн цэ 2018
-        </div>
+      </ul> <!-- nav nav-pills pull-right -->
+      <h3><a class="text-muted" href="{% url 'index'%}" style="text-decoration: none;">The Bernty Project</a></h3>
+    </div> <!-- page-header -->
+    {% if user.is_authenticated %}
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 text-left">
+            {% include 'weather/find_city.html' %}
+          </div> <!-- col-md-6 text-left -->
+          <div class="col-md-6 text-right">
+            <span>
+              Привет, {{ user.get_short_name }},<br /> ты приперся
+              {% if request.session.num_visits > 1 %} уже {% endif %}
+              в {{ request.session.num_visits }} раз
+            </span>
+          </div> <!-- col-md-6 text-right -->
+        </div> <!-- row -->
+      </div> <!-- container -->
+      <hr>
+    {% endif %} 
+    <div class="content jumbotron container">
+      {% block content %}
+      {% endblock %}
     </div>
+    <div class="page-footer">
+      <hr>
+      Walenok Продакшн цэ 2018
+    </div> <!-- page-footer -->
+  </div> <!-- container -->
 </body>
 </html>

@@ -1,0 +1,17 @@
+<!-- templates/signup.html -->
+{% extends 'weather/base.html' %}
+{% block content %}
+  <h2>Регистрация</h2>
+  <form id="contact_form" action="{% url 'accounts:signup' %}" method="post">
+    {% csrf_token %}
+    {% load bootstrap3 %}
+    {{ user_creation_form.non_field_errors }}
+    {{ user_creation_form.non_field_errors }}
+    {% bootstrap_form user_creation_form %}
+    {% buttons %}
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        </div>
+    {% endbuttons %}
+  </form>
+{% endblock %}

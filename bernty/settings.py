@@ -25,6 +25,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 MEDIA_ROOT = '/home/b/berntyru/public_html/media'
 MEDIA_ROOT = str(APPS_DIR('media'))
 
+PROJECT_NAME = 'The Bernty Project'
 # Указываем тип переменных и значение по умолчанию, если переменная не инициализирована в .env-файле.  
 
 env = environ.Env(
@@ -212,4 +213,12 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.spaceweb.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = 'robot@bernty.ru'
+EMAIL_HOST_PASSWORD = 'UXW8ayjLXt' # env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND

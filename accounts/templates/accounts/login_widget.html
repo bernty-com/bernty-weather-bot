@@ -1,6 +1,6 @@
 <form id="contact_form" action="{% url 'accounts:login' %}" method="post">
-    {% load bootstrap3 %}
     {% csrf_token %}
+    {% load bootstrap3 %}
     {% bootstrap_form login_form %}
     {% buttons %}
         <div class="form-group">
