@@ -3,6 +3,7 @@
 from django.conf.urls import url
 from . import views
 
+
 urlpatterns = [
 #    url(r'^city/(?P<pk>[0-9]+)/favorite/$', views.CityDetailView.switch_favorite, name='favorite-city-func'),
     url(r'^city/(?P<pk>[0-9]+)/favorite/$', views.make_favorite_city, name='favorite-city-func'),

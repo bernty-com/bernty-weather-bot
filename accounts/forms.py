@@ -37,13 +37,13 @@ class SignUpForm(UserCreationForm):
 
     }
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if username is None or username == '':
-            raise forms.ValidationError(
-                self.error_messages['empty_username'],
-                    code='empty_username',
-                )
+#    def clean_username(self):
+#        username = self.cleaned_data.get('username')
+#        if username is None or username == '':
+#            raise forms.ValidationError(
+#                self.error_messages['empty_username'],
+#                    code='empty_username',
+#                )
 
 def year_for_birth_date():
     year_now = d.now().year

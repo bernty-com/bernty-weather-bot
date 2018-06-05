@@ -1,1 +1,1 @@
-{% autoescape off %}Привет, {{ user.username }}, для активации регистраци нажми на ссылку: https://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}{% endautoescape %}
+{% autoescape off %}Привет, {{ user.username }}, для активации регистрации нажми на ссылку: https://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}{% endautoescape %}

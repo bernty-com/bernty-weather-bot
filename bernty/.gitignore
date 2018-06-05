@@ -1,1 +1,1 @@
-*.pyc*~__pycache__myvenv/static.DS_Store.env
+*.pyc*~*.sql*.dump*/__pycache__/*.gitignore.DS_Store.env.htaccessdebug.log

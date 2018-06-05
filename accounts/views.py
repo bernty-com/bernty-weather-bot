@@ -108,7 +108,7 @@ class ESignUpView(generic.CreateView):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            mail_sent = self.send_mail(request, user)
+            mail_sent = self.send_email(request, user)
             # смотрит на настройку SITE_ID и берет из БД домен
 #            current_site = get_current_site(request)
 #            subject = '{project_name} : Регистрационная информация'.\
@@ -158,7 +158,7 @@ class ESignUpView(generic.CreateView):
             'token': account_activation_token.make_token(user),
             }
         text_message = render_to_string(
-            'accounts/account_activation_email.text',
+            'accounts/account_activation_email.txt',
             context=context)
         html_message = render_to_string(
             'accounts/account_activation_email.html',

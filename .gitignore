@@ -7,4 +7,4 @@
 .DS_Store
 .env
 .htaccess
-debug.log
+log/debug.log
