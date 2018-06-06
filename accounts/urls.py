@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^signup/$', views.ESignUpView.as_view(), name='signup'),
     url(r'^profile/$', views.ProfileView.as_view(), name='profile'),
     url(r'^account_activation_sent/$', views.account_activation_sent, name='account_activation_sent'),
+    url(r'^account_activation_fail/$', views.account_activation_fail, name='account_activation_fail'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.activate, name='activate'),
 ]

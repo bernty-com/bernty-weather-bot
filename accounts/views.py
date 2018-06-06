@@ -108,7 +108,11 @@ class ESignUpView(generic.CreateView):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            mail_sent = self.send_email(request, user)
+            if self.send_email(request, user) == 1:
+                return redirect('accounts:account_activation_sent')
+            else:
+                return redirect('accounts:account_activation_fail')
+            
             # смотрит на настройку SITE_ID и берет из БД домен
 #            current_site = get_current_site(request)
 #            subject = '{project_name} : Регистрационная информация'.\
@@ -163,13 +167,13 @@ class ESignUpView(generic.CreateView):
         html_message = render_to_string(
             'accounts/account_activation_email.html',
             context=context)
-        res = user.email_user(
+        sent = user.email_user(
             subject,
             message=text_message,
             fail_silently=False,
             html_message=html_message
             )
-        return res
+        return sent
 
 
 class ProfileView(LoginRequiredMixin, View):
@@ -214,6 +218,8 @@ class ProfileView(LoginRequiredMixin, View):
 def account_activation_sent(request):
     return render(request, 'accounts/account_activation_sent.html')
 
+def account_activation_fail(request):
+    return render(request, 'accounts/account_activation_fail.html')
 
 def activate(request, uidb64, token):
     try:
