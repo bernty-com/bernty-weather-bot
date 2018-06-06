@@ -12,9 +12,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-#        migrations.AlterField(
-#            model_name='favoritecity',
-#            name='favorite_id',
-#            field=models.AutoField(primary_key=True, serialize=False, verbose_name='ID'),
-#        ),
+        migrations.AlterField(
+            model_name='favoritecity',
+            name='favorite_id',
+            field=models.AutoField(primary_key=True, serialize=False, verbose_name='ID'),
+        ),
     ]

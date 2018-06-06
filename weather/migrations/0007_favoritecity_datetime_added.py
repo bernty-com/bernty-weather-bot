@@ -13,10 +13,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-#        migrations.AddField(
-#            model_name='favoritecity',
-#            name='datetime_added',
-#            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
-#            preserve_default=False,
-#        ),
+        migrations.AddField(
+            model_name='favoritecity',
+            name='datetime_added',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
     ]
