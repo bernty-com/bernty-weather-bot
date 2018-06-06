@@ -19,6 +19,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
 
 from django.urls import reverse_lazy
 
@@ -108,7 +109,7 @@ class ESignUpView(generic.CreateView):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            if self.send_email(request, user) == 1:
+            if self.send_activation_mail(request, user):
                 return redirect('accounts:account_activation_sent')
             else:
                 return redirect('accounts:account_activation_fail')
@@ -150,7 +151,7 @@ class ESignUpView(generic.CreateView):
         form = SignUpForm()
         return render(request, self.template_name, {'user_creation_form': form})
         
-    def send_email(self, request, user):
+    def send_activation_mail(self, request, user):
         # смотрит на настройку SITE_ID и берет из БД домен
         current_site = get_current_site(request)
         subject = '{project_name} : Регистрационная информация'.\
@@ -167,13 +168,16 @@ class ESignUpView(generic.CreateView):
         html_message = render_to_string(
             'accounts/account_activation_email.html',
             context=context)
-        sent = user.email_user(
-            subject,
-            message=text_message,
-            fail_silently=False,
-            html_message=html_message
-            )
-        return sent
+        try:
+            user.email_user(
+                subject=subject,
+                message=text_message,
+                fail_silently=False,
+                html_message=html_message
+                )
+            return True
+        except:
+            return False
 
 
 class ProfileView(LoginRequiredMixin, View):

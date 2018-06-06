@@ -93,23 +93,23 @@ LOGGING = {
     'loggers': {
         'telegrambot': {
             'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
+            'level': 'INFO',
+            'propagate': False,
         },
         'django.request': {
             'handlers': ['file', 'console'],
-            'level': 'DEBUG',
-            'propagate': True,
+            'level': 'INFO',
+            'propagate': False,
         },
         'django': {
             'handlers': ['file','console'],
-            'level': 'DEBUG',
-            'propagate': True,
+            'level': 'INFO',
+            'propagate': False,
         },
         'py.warnings': {
             'handlers': ['file','console'],
-            'level': 'DEBUG',
-            'propagate': True,
+            'level': 'INFO',
+            'propagate': False,
         },
     }   
 }
@@ -128,11 +128,11 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'bootstrap3', # design
-    'accounts.apps.AccountsConfig',
     'telegrambot',
     'rest_framework',
 ]
 LOCAL_APPS = [
+    'accounts.apps.AccountsConfig',
     'weather', 
     'berntybot',
 ]
@@ -213,7 +213,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = env('EMAIL_BACKEND')
 EMAIL_HOST = 'smtp.spaceweb.ru'
 EMAIL_PORT = 2525
 EMAIL_HOST_USER = 'robot@bernty.ru'
