@@ -7,6 +7,7 @@ from django.dispatch import receiver
 
 from weather.models import Country
 
+
 class Profile(models.Model):
     user = models.OneToOneField(
         User,

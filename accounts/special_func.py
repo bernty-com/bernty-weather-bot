@@ -1,5 +1,6 @@
 from django.utils.http import is_safe_url, urlunquote
- 
+
+
 def get_next_url(request):
     next = request.META.get('HTTP_REFERER')
     if next:
@@ -8,6 +9,7 @@ def get_next_url(request):
         next = '/'
     return next
 
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -15,4 +17,3 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
-

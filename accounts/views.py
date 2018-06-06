@@ -2,8 +2,9 @@
 try:
     from urllib.parse import urlparse
 except ImportError:
-     from urlparse import urlparse
+    from urlparse import urlparse
 
+from smtplib import SMTPException
 from django.shortcuts import redirect, render, render_to_response
 from django.template.context_processors import csrf
 from django.template.loader import render_to_string
@@ -19,7 +20,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import send_mail
 
 from django.urls import reverse_lazy
 
@@ -113,21 +113,6 @@ class ESignUpView(generic.CreateView):
                 return redirect('accounts:account_activation_sent')
             else:
                 return redirect('accounts:account_activation_fail')
-            
-            # смотрит на настройку SITE_ID и берет из БД домен
-#            current_site = get_current_site(request)
-#            subject = '{project_name} : Регистрационная информация'.\
-#                format(project_name=settings.PROJECT_NAME)
-#            message = render_to_string(
-#                'accounts/account_activation_email.html',
-#                {
-#                    'user': user,
-#                    'domain': current_site.domain,
-#                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-#                    'token': account_activation_token.make_token(user),
-#                })
-#            user.email_user(subject, message, fail_silently=False)
-            return redirect('accounts:account_activation_sent')
 
 # Без использования почты
 #            user = form.save()
@@ -150,7 +135,7 @@ class ESignUpView(generic.CreateView):
     def get(self, request):
         form = SignUpForm()
         return render(request, self.template_name, {'user_creation_form': form})
-        
+
     def send_activation_mail(self, request, user):
         # смотрит на настройку SITE_ID и берет из БД домен
         current_site = get_current_site(request)
@@ -176,7 +161,7 @@ class ESignUpView(generic.CreateView):
                 html_message=html_message
                 )
             return True
-        except:
+        except SMTPException:
             return False
 
 
@@ -219,11 +204,42 @@ class ProfileView(LoginRequiredMixin, View):
             )
 
 
+def send_activation_mail(request, user):
+    # смотрит на настройку SITE_ID и берет из БД домен
+    current_site = get_current_site(request)
+    subject = '{project_name} : Регистрационная информация'.\
+        format(project_name=settings.PROJECT_NAME)
+    context = {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+    }
+    text_message = render_to_string(
+        'accounts/account_activation_email.txt',
+        context=context)
+    html_message = render_to_string(
+        'accounts/account_activation_email.html',
+        context=context)
+    try:
+        user.email_user(
+            subject=subject,
+            message=text_message,
+            fail_silently=False,
+            html_message=html_message
+            )
+        return True
+    except SMTPException:
+        return False
+
+
 def account_activation_sent(request):
     return render(request, 'accounts/account_activation_sent.html')
 
+
 def account_activation_fail(request):
     return render(request, 'accounts/account_activation_fail.html')
+
 
 def activate(request, uidb64, token):
     try:
@@ -241,4 +257,3 @@ def activate(request, uidb64, token):
         return redirect('index')
     else:
         return render(request, 'accounts/account_activation_invalid.html')
-                

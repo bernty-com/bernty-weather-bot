@@ -2,16 +2,16 @@
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 from django.utils.encoding import smart_text
-from datetime import datetime as d 
+from datetime import datetime as d
 
 from weather.models import Country
 
 
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=254,
+    email = forms.EmailField(
+        max_length=254,
         label=smart_text('Адрес электронной почты'),
         help_text=smart_text('На адрес электронной почты будет отправлен запрос на подтверждение.')
         )
@@ -30,9 +30,9 @@ class SignUpForm(UserCreationForm):
             smart_text("Нехорошо как-то человеку без ника. Роботу можно."),
         'incorrect_location':
             smart_text("Ты с какова горада, %(first_name)s?"),
-        'inactive_account': 
+        'inactive_account':
             smart_text("Профиль пользователя не активирован."),
-        'password_mismatch': 
+        'password_mismatch':
             smart_text("The two password fields didn't match."),
 
     }
@@ -45,9 +45,10 @@ class SignUpForm(UserCreationForm):
 #                    code='empty_username',
 #                )
 
+
 def year_for_birth_date():
     year_now = d.now().year
-    return tuple([int(_) for _ in range(year_now-80,year_now+1)])
+    return tuple([int(_) for _ in range(year_now-80, year_now+1)])
 
 
 class ProfileForm(forms.Form):
@@ -63,7 +64,8 @@ class ProfileForm(forms.Form):
         required=False,
         help_text=smart_text('Необязательное поле')
         )
-    email = forms.EmailField(max_length=254,
+    email = forms.EmailField(
+        max_length=254,
         label=smart_text('Адрес электронной почты'),
         widget=forms.EmailInput,
         help_text=smart_text('В случае изменения адреса будет отправлен повторный запрос на подтверждение.')
@@ -94,6 +96,7 @@ class ProfileForm(forms.Form):
         label=smart_text('Страна'),
         widget=forms.Select,
         queryset=Country.objects.all().order_by('name'),
+        required=False,
         )
 
     error_messages = {
@@ -101,7 +104,7 @@ class ProfileForm(forms.Form):
             smart_text("Нехорошо как-то человеку без имени."),
         'incorrect_location':
             smart_text("Ты с какова горада, %(first_name)s?"),
-        'inactive_account': 
+        'inactive_account':
             smart_text("Профиль пользователя не активирован."),
     }
 
@@ -124,16 +127,16 @@ class ProfileForm(forms.Form):
         if first_name is None or first_name == '':
             raise forms.ValidationError(
                 self.error_messages['first_name'],
-                    code='first_name',
+                code='first_name',
                 )
 
     def clean_location(self):
+        first_name = self.cleaned_data.get('first_name')
         location = self.cleaned_data.get('location')
         if location == 'xxx':  # вот такая прихоть
             raise forms.ValidationError(
                 self.error_messages['incorrect_location'],
-                    code='incorrect_location',
-                    params={'first_name': first_name},
+                code='incorrect_location',
+                params={'first_name': first_name},
                 )
         return location
-
