@@ -12,9 +12,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-#        migrations.AlterField(
-#            model_name='city',
-#            name='local_name',
-#            field=models.CharField(default='', max_length=100, verbose_name='Название (рус.)'),
-#        ),
+        migrations.AlterField(
+            model_name='city',
+            name='local_name',
+            field=models.CharField(default='', max_length=100, verbose_name='Название (рус.)'),
+        ),
     ]

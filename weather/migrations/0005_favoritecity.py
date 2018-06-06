@@ -15,16 +15,16 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='FavoriteCity',
-            fields=[
-                ('favorite_id', models.IntegerField(primary_key=True, serialize=False, verbose_name='ID')),
-                ('city', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='weather.City', verbose_name='Город')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь')),
-            ],
-            options={
-                'verbose_name_plural': 'Избранные города',
-                'verbose_name': 'Избранный город',
-            },
-        ),
+#        migrations.CreateModel(
+#            name='FavoriteCity',
+#            fields=[
+#                ('favorite_id', models.IntegerField(primary_key=True, serialize=False, verbose_name='ID')),
+#                ('city', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='weather.City', verbose_name='Город')),
+#                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь')),
+ #           ],
+#            options={
+#                'verbose_name_plural': 'Избранные города',
+#                'verbose_name': 'Избранный город',
+#            },
+#        ),
     ]
