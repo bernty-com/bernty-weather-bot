@@ -14,9 +14,12 @@ from django.views import generic
 
 from django.conf import settings
 from django.contrib import auth
+from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
@@ -177,8 +180,10 @@ class ProfileView(LoginRequiredMixin, View):
             user.profile.location = form.cleaned_data.get('location')
             user.profile.country = form.cleaned_data.get('country')
             user.save()
+            messages.success(request, 'Данные успешно изменены!')
             return redirect('index')
-
+        else:
+            messages.error(request, 'Исправьте ошибки заполнения формы')
         return render(
             request,
             self.template_name,
@@ -257,3 +262,20 @@ def activate(request, uidb64, token):
         return redirect('index')
     else:
         return render(request, 'accounts/account_activation_invalid.html')
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Пароль успешно изменен!')
+            return redirect('index')
+        else:
+            messages.error(request, 'Что-то пошло не так (:')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'accounts/change_password.html', {
+        'form': form
+    })

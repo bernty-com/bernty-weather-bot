@@ -15,6 +15,7 @@
     <div class="page-header">
       <ul class="nav nav-pills pull-right">
         {% if user.is_authenticated %}
+        <li class=""><a href="{% url 'accounts:change_password'%}">Изменить пароль</a></li>
         <li class=""><a href="{% url 'accounts:profile'%}">Профиль</a></li>
         <li class="active"><a href="{% url 'accounts:logout'%}">Выйти</a></li>
         {% else %}
@@ -23,6 +24,7 @@
       </ul> <!-- nav nav-pills pull-right -->
       <h3><a class="text-muted" href="{% url 'index'%}" style="text-decoration: none;">The Bernty Project</a></h3>
     </div> <!-- page-header -->
+    <main>
     {% if user.is_authenticated %}
       <div class="container">
         <div class="row">
@@ -40,7 +42,9 @@
       </div> <!-- container -->
       <hr>
     {% endif %} 
+    </main>
     <div class="content jumbotron container">
+       {% include 'weather/messages.html' %}
       {% block content %}
       {% endblock %}
     </div>
@@ -51,3 +55,4 @@
   </div> <!-- container -->
 </body>
 </html>
+

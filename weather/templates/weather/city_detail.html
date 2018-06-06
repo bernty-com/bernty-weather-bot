@@ -52,7 +52,7 @@
     <p>{{fc.clouds_all}}%</p>
     {% if fc.temp_min and fc.temp_max and fc.temp_min != fc.temp_max%}
       <h4>мин-maкс</h4>
-      <p><sub>{{fc.temp_min}}&deg;</sub>&mdash; <sup>{{fc.temp_max}}&deg;</sup></p>
+      <p>{{min_max}}&deg;</p>
     {% endif%}
   </div> <!-- col-lg-6 -->
 </div> <!-- row marketing -->

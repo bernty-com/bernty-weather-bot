@@ -9,6 +9,9 @@ DSIGN = u'\N{DEGREE SIGN}'
 MSIGN = u'\N{APOSTROPHE}'
 SSIGN = u'\N{QUOTATION MARK}'
 
+TEMP_MIN = u'\N{DOWNWARDS ARROW TO BAR}'
+TEMP_MAX = u'\N{UPWARDS ARROW TO BAR}'
+
 side_letter = {
     0: u'С',
     1: u'СВ',
@@ -153,6 +156,20 @@ def coordinate(val, type):
         side = 'S' if float(val) < 0 else 'N'
 
     return u'{side} {dd}{dsign}{mm}{msign}{ss}{ssign}'.format(
-        dd=dd, mm=mm, ss=ss, side=side,
-        dsign=DSIGN, msign=MSIGN, ssign=SSIGN
+        dd=dd,
+        mm=mm,
+        ss=ss,
+        side=side,
+        dsign=DSIGN,
+        msign=MSIGN,
+        ssign=SSIGN
         )
+
+def min_max_temperature(min, max):
+    return '{min_sign}{min} {max_sign}{max}'.format(
+        min_sign=TEMP_MIN,
+        min=min,
+        max_sign=TEMP_MAX,
+        max=max,
+        )
+    

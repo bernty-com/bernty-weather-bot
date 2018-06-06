@@ -14,7 +14,7 @@ from django.conf import settings
 
 
 from .models import City, Forecast, FavoriteCity
-
+from .model_func import min_max_temperature
 
 CITY_PER_PAGE = 20
 
@@ -73,8 +73,13 @@ class CityDetailView(LoginRequiredMixin, DetailView):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
 #        city = City.objects.get(pk=pk)
 # не решено. Надо взять настоящего пользователя
-        user = 2 # User.objects.all() #  auth.get_user(request)
-        context['fc'] = Forecast(pk)
+        user = 2
+        forecast = Forecast(pk)
+        context['fc'] = forecast
+        context['min_max'] = min_max_temperature(
+                                    forecast.temp_min,
+                                    forecast.temp_max
+                                    )
         context['is_favorited'] = FavoriteCity.objects.filter(
             city__exact=pk,
             user__exact=user
