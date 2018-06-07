@@ -33,7 +33,7 @@ env = environ.Env(
     SECRET_KEY=str,
     DEBUG=(bool, True),
     DATABASE_URL=str,
-    ALLOWED_HOSTS = (list,['bernty.ru']),
+    ALLOWED_HOSTS = (list,[]),
     KKA_TEST=(str,'No test'),
 )
 
@@ -45,8 +45,6 @@ SECRET_KEY = env('SECRET_KEY')
 #os.environ.get('SECRET_KEY','my-secret-key-here')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
-if DEBUG:
-    ALLOWED_HOSTS += ['localhost','127.0.0.1','testserver']
 
 ADMINS = env('ADMINS')
 

@@ -58,7 +58,8 @@ class City(models.Model):
         'Country',
         on_delete=models.SET_NULL,
         null=True,
-        verbose_name='Страна'
+        verbose_name='Страна',
+        related_name='cities'
         )
     coord_lon = models.DecimalField(
         max_digits=19,
@@ -187,14 +188,17 @@ class FavoriteCity(models.Model):
         verbose_name="ID"
         )
     city = models.ForeignKey(
-        'City',
+        City,
         on_delete=models.CASCADE,
-        verbose_name="Город"
+        verbose_name="Город",
+        related_name='favorites'
         )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        verbose_name="Пользователь"
+        verbose_name="Пользователь",
+        related_name='favorites'
+        
         )
     datetime_added = models.DateTimeField(
         auto_now_add=True
