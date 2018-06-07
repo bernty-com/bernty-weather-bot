@@ -13,15 +13,24 @@
 <body>
   <div class="container">
     <div class="page-header">
-      <ul class="nav nav-pills pull-right">
-        {% if user.is_authenticated %}
-        <li class=""><a href="{% url 'accounts:change_password'%}">Изменить пароль</a></li>
-        <li class=""><a href="{% url 'accounts:profile'%}">Профиль</a></li>
-        <li class="active"><a href="{% url 'accounts:logout'%}">Выйти</a></li>
-        {% else %}
-        <li class="active"><a href="{% url 'accounts:signup'%}">Регистрация</a></li>
-        {% endif %} 
-      </ul> <!-- nav nav-pills pull-right -->
+      {% if user.is_authenticated %}
+        <div class="btn-group pull-right">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            {{ user.get_short_name }}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class=""><a href="{% url 'accounts:profile'%}">Изменить профиль</a></li>
+            <li class=""><a href="{% url 'accounts:change_password'%}">Изменить пароль</a></li>
+            <li class="divider"></li>
+            <li class=""><a href="{% url 'accounts:logout'%}">Выйти</a></li>
+          </ul> <!-- dropdown-menu -->
+        </div> <!-- btn-group pull-right -->
+      {% else %}
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="{% url 'accounts:signup'%}">Регистрация</a></li>
+        </ul> <!-- nav nav-pills pull-right -->
+      {% endif %} 
       <h3><a class="text-muted" href="{% url 'index'%}" style="text-decoration: none;">The Bernty Project</a></h3>
     </div> <!-- page-header -->
     <main>
@@ -33,7 +42,7 @@
           </div> <!-- col-md-6 text-left -->
           <div class="col-md-6 text-right">
             <span>
-              Привет, {{ user.get_short_name }},<br /> ты приперся
+              Ты приперся
               {% if request.session.num_visits > 1 %} уже {% endif %}
               в {{ request.session.num_visits }} раз
             </span>
