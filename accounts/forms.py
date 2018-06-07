@@ -96,6 +96,7 @@ class ProfileForm(forms.Form):
         label=smart_text('Страна'),
         widget=forms.Select,
         queryset=Country.objects.all().order_by('name'),
+        help_text=smart_text('Страна пребывания'),
         required=False,
         )
 
@@ -122,13 +123,13 @@ class ProfileForm(forms.Form):
             'country',
             )
 
-    def clean_first_name(self):
-        first_name = self.cleaned_data.get('first_name')
-        if first_name is None or first_name == '':
-            raise forms.ValidationError(
-                self.error_messages['first_name'],
-                code='first_name',
-                )
+#    def clean_first_name(self):
+#        first_name = self.cleaned_data.get('first_name')
+#        if first_name is None or first_name == '':
+#            raise forms.ValidationError(
+#                self.error_messages['first_name'],
+#                code='first_name',
+#                )
 
     def clean_location(self):
         first_name = self.cleaned_data.get('first_name')

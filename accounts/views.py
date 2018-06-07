@@ -175,6 +175,8 @@ class ProfileView(LoginRequiredMixin, View):
         user = request.user
         form = ProfileForm(request.POST)
         if form.is_valid():
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
             user.profile.birth_date = form.cleaned_data.get('birth_date')
             user.profile.bio = form.cleaned_data.get('bio')
             user.profile.location = form.cleaned_data.get('location')

@@ -27,8 +27,8 @@ MEDIA_ROOT = '/home/b/berntyru/public_html/media'
 MEDIA_ROOT = str(APPS_DIR('media'))
 
 PROJECT_NAME = 'The Bernty Project'
-# Указываем тип переменных и значение по умолчанию, если переменная не инициализирована в .env-файле.  
 
+# Указываем тип переменных и значение по умолчанию, если переменная не инициализирована в .env-файле.  
 env = environ.Env(
     SECRET_KEY=str,
     DEBUG=(bool, True),
@@ -53,7 +53,7 @@ ADMINS = env('ADMINS')
 # Telegram Bot setting
 TELEGRAM_BOT_HANDLERS_CONF = "berntybot.bot_handlers"
 TELEGRAM_BOT_TOKEN_EXPIRATION = "2" # tow hours before a token expires
-SITE_ID=1 # bernty.ru
+SITE_ID = 1 # bernty.ru
 KKA_TEST = env('KKA_TEST')
 
 LOGGING = {
@@ -187,9 +187,6 @@ import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500, ssl_require=False)
 DATABASES['default'].update(db_from_env)
 
-test = {'TEST':{'NAME':'test_KKA'}}
-#DATABASES['default'].update(test)
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -219,9 +216,10 @@ EMAIL_BACKEND = env('EMAIL_BACKEND')
 EMAIL_HOST = 'smtp.spaceweb.ru'
 EMAIL_PORT = 2525
 EMAIL_HOST_USER = 'robot@bernty.ru'
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD') # 'UXW8ayjLXt'
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND
 
 # Messages block
 MESSAGE_TAGS = {
@@ -231,4 +229,3 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
-MAILER_EMAIL_BACKEND = EMAIL_BACKEND
