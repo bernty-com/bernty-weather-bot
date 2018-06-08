@@ -33,7 +33,7 @@ env = environ.Env(
     SECRET_KEY=str,
     DEBUG=(bool, True),
     DATABASE_URL=str,
-    ALLOWED_HOSTS=(list,['localhost']),
+    ALLOWED_HOSTS=(list,['localhost','bernty.ru']),
     KKA_TEST=(str,'No test'),
 )
 
