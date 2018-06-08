@@ -19,7 +19,7 @@ from django.core.urlresolvers import reverse
 from .models import City, Forecast
 
 from .model_func import min_max_temperature
-from django.http import Http404
+
 
 CITY_PER_PAGE = 20
 
@@ -69,7 +69,6 @@ class CityView(LoginRequiredMixin, ListView):
 class CityDetailView(LoginRequiredMixin, DetailView):
     model = City
     redirect_field_name = 'next'
-#    queryset = City.objects.all()
     template_name = 'weather/city_detail.html'
     # login_url =  см. настройку LOGIN_URL
 

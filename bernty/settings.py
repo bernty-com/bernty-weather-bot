@@ -97,18 +97,18 @@ LOGGING = {
         },
         'django.request': {
             'handlers': ['file', 'console'],
-            'level': 'INFO',
-            'propagate': False,
+            'level': 'DEBUG',
+            'propagate': True,
         },
         'django': {
             'handlers': ['file','console'],
-            'level': 'INFO',
-            'propagate': False,
+            'level': 'DEBUG',
+            'propagate': True,
         },
         'py.warnings': {
             'handlers': ['file','console'],
-            'level': 'INFO',
-            'propagate': False,
+            'level': 'DEBUG',
+            'propagate': True,
         },
     }   
 }
@@ -231,6 +231,6 @@ MESSAGE_TAGS = {
 }
 
 # Favorites block
-POSITIVE_NOTATION = "Add"
+POSITIVE_NOTATION = " Add  "
 NEGATIVE_NOTATION = "Remove"
 ALLOW_ANONYMOUS = "FALSE"
