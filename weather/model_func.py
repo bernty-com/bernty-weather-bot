@@ -166,7 +166,7 @@ def coordinate(val, type):
         )
 
 def min_max_temperature(min, max):
-    return u'{min_sign}{min} {max_sign}{max}'.format(
+    return u'{min_sign}{min}&deg;&nbsp;&nbsp;{max_sign}{max}&deg;'.format(
         min_sign=TEMP_MIN,
         min=min,
         max_sign=TEMP_MAX,
