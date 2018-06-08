@@ -11,22 +11,27 @@
     <ul class="list-group">
       {% for c in object_list %}
         <li class="list-group-item">
-          <a href="{{ c.get_absolute_url }}">
-            {% if c.local_name %}
-              {{ c.local_name }}
-            {% else %}
-              {{ c.name }}
-            {% endif %}
-          </a>
-{% load favorite_tags %}  <!-- Loading the template tag -->
-{% get_fav_count c %}  <!-- Include the number of people 'favorited' a certain object -->
-
-<!-- authentication is required for users to use our functionality, however there's an implemented tag for unauthenticated users -->
-{% if user.is_authenticated %} 
-    {%  get_fav c user %}  <!-- for unauthenticated users -->
-{% else %}
-    {% get_fav_nouser c request %} <!-- for authenticated users -->
-{% endif %}
+          <div class="row">
+            <div class="col-md-10 text-left">
+              <a href="{{ c.get_absolute_url }}">
+                {% if c.local_name %}
+                  {{ c.local_name }}
+                {% else %}
+                  {{ c.name }}
+                {% endif %}
+              </a>
+            </div> <!-- col-md-10 text-left -->
+            <div class="col-md-1 text-right">
+              {% if user.is_authenticated %} 
+                {%  get_fav c user %}
+              {% else %}
+                {% get_fav_nouser c request %}
+              {% endif %}
+            </div> <!-- col-md-1 text-right -->
+            <div class="col-md-1 text-right">
+              {% get_fav_count c %}
+            </div> <!-- col-md-1 text-left -->
+          </div> <!-- row -->
         </li>
       {% empty %}
         <li>Не найдено ни одного города. Тщательнее надо!</li>

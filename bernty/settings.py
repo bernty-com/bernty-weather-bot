@@ -230,6 +230,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-POSITIVE_NOTATION = "Favorite"
-NEGATIVE_NOTATION = "Unfavorite"
+POSITIVE_NOTATION = "Add"
+NEGATIVE_NOTATION = "Remove"
 ALLOW_ANONYMOUS = "FALSE"
