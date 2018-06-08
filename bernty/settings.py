@@ -18,7 +18,7 @@ APPS_DIR = ROOT_DIR.path('public_html')
 ENV_DIR = str(APPS_DIR('bernty'))
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
@@ -33,7 +33,7 @@ env = environ.Env(
     SECRET_KEY=str,
     DEBUG=(bool, True),
     DATABASE_URL=str,
-    ALLOWED_HOSTS = (list,[]),
+    ALLOWED_HOSTS=(list,['localhost']),
     KKA_TEST=(str,'No test'),
 )
 
@@ -129,8 +129,10 @@ THIRD_PARTY_APPS = [
     'bootstrap3', # design
     'telegrambot',
     'rest_framework',
+    'fav',
 ]
 LOCAL_APPS = [
+    'common',
     'accounts.apps.AccountsConfig',
     'weather', 
     'berntybot',
@@ -227,3 +229,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+POSITIVE_NOTATION = "Favorite"
+NEGATIVE_NOTATION = "Unfavorite"
+ALLOW_ANONYMOUS = "FALSE"

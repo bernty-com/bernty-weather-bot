@@ -4,8 +4,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_text
 
-from .models import Country, City, FavoriteCity
-
+from .models import Country, City
 
 class HemisphereFilter(admin.SimpleListFilter):
     # Human-readable title which will be displayed in the
@@ -82,11 +81,7 @@ class CityAdmin(admin.ModelAdmin):
     view_country.short_name = 'страна' 
     view_country.empty_value_display = '-- не указана --'
 
-class FavoriteCityAdmin(admin.ModelAdmin):
-    pass
-    
-    
+
 # Register the admin class with the associated model
 admin.site.register(City,CityAdmin)
 admin.site.register(Country, CountryAdmin)
-admin.site.register(FavoriteCity,FavoriteCityAdmin)

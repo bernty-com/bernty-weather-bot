@@ -15,6 +15,9 @@ from .model_func import (
 
 from django.conf import settings
 
+from django.contrib.contenttypes.fields import GenericRelation
+from fav.models import Favorite
+
 
 @python_2_unicode_compatible
 class Country(models.Model):
@@ -41,7 +44,7 @@ class Country(models.Model):
 @python_2_unicode_compatible
 class City(models.Model):
     #  Fields
-    city_id = models.IntegerField(
+    id = models.IntegerField(
         primary_key=True,
         verbose_name="ID"
         )
@@ -71,6 +74,7 @@ class City(models.Model):
         decimal_places=6,
         verbose_name='Широта'
         )
+    favorites = GenericRelation(Favorite)
 
     class Meta:
         ordering = ["name"]
@@ -78,7 +82,7 @@ class City(models.Model):
         verbose_name_plural = "Города"
 
     def get_absolute_url(self):
-        return reverse('city.detail', args=[str(self.city_id)])
+        return reverse('city.detail', args=[str(self.id)])
 
     def get_city_id(self):
         return self.city_id
@@ -179,46 +183,3 @@ class Forecast(models.Model):
         self.city_id = d['id']
         self.name = d['name']
         self.country = d['sys'].get('country')
-
-
-class FavoriteCity(models.Model):
-    # Fields
-    favorite_id = models.AutoField(
-        primary_key=True,
-        verbose_name="ID"
-        )
-    city = models.ForeignKey(
-        City,
-        on_delete=models.CASCADE,
-        verbose_name="Город",
-        related_name='favorites'
-        )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        verbose_name="Пользователь",
-        related_name='favorites'
-        
-        )
-    datetime_added = models.DateTimeField(
-        auto_now_add=True
-        )
-
-    class Meta:
-        verbose_name = "Избранный город"
-        verbose_name_plural = "Избранные города"
-
-    def get(self, city_id, user_id):
-        return self.objects.filter(city__exact=city_id, user__exact=user_id)
-
-    def add(self, city):
-        user = auth.user
-        return self.objects.create(city=city, user=user)
-
-    def remove(self, city, user):
-        city = City.objects.get(pk=pk)
-        user = auth.user
-        favorite = self.get(city, user__exact=user)
-        if favorite.exists():
-            count_deleted = favorite.delete()
-

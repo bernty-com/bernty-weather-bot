@@ -8,7 +8,10 @@
   {% bootstrap_css %}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="{% static '/'%}favicon.ico" type="image/x-icon" />
-  <title>The Bernty Project</title>
+  <link href="https://fonts.googleapis.com/css?family=Averia+Serif+Libre" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script src="{% static 'js/fav.js' %}"></script>
+  <title>{% block title %}The Bernty Project{% endblock %}</title>
 </head>
 <body>
   <div class="container">
@@ -31,7 +34,7 @@
           <li class="active"><a href="{% url 'accounts:signup'%}">Регистрация</a></li>
         </ul> <!-- nav nav-pills pull-right -->
       {% endif %} 
-      <h3><a class="text-muted" href="{% url 'index'%}" style="text-decoration: none;">The Bernty Project</a></h3>
+      <h3><a class="text-muted" href="{% url 'index'%}" style="text-decoration: none;"><span class="app-brand">The Bernty Project</span></a></h3>
     </div> <!-- page-header -->
     <main>
     {% if user.is_authenticated %}

@@ -2,7 +2,7 @@
 {% extends 'weather/base.html' %}
 {% block content %}
   <h2>Профиль</h2>
-  <form id="profile_form" action="{% url 'accounts:profile' %}" method="post">
+  <form id="profile_form" action="{% url 'accounts:profile' %}" method="post" novalidate>
     {% csrf_token %}
     {% load bootstrap3 %}
     {% bootstrap_form user_profile_form %}

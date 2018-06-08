@@ -2,9 +2,11 @@
 
 from django.shortcuts import render
 from django.shortcuts import render_to_response
+from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 
 from django.contrib import auth
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.template.context_processors import csrf
 from django.views import View
@@ -12,9 +14,12 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 
+from django.core.urlresolvers import reverse
 
-from .models import City, Forecast, FavoriteCity
+from .models import City, Forecast
+
 from .model_func import min_max_temperature
+from django.http import Http404
 
 CITY_PER_PAGE = 20
 
@@ -71,77 +76,10 @@ class CityDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(CityDetailView, self).get_context_data(**kwargs)
         pk = self.kwargs.get(self.pk_url_kwarg, None)
-#        city = City.objects.get(pk=pk)
-# не решено. Надо взять настоящего пользователя
-        user = 2
         forecast = Forecast(pk)
         context['fc'] = forecast
         context['min_max'] = min_max_temperature(
                                     forecast.temp_min,
                                     forecast.temp_max
                                     )
-        context['is_favorited'] = FavoriteCity.objects.filter(
-            city__exact=pk,
-            user__exact=user
-            ).exists()
         return context
-
-    def switch_favorite(request, pk, *args, **kwargs):
-        city = City.objects.get(pk=pk)
-        user = 2 #  User.objects.all()
-        favorite = FavoriteCity.objects.filter(city__exact=pk, user__exact=user)
-        if favorite.exists():
-            count_deleted = favorite.delete() 
-        else: 
-            FavoriteCity.objects.create(city=city, user=user)
-        self.get_context_data(**kwargs)
-
-    
-
-class FavoriteCityView(View):
-    context_object_name = 'city'
-#    context_object_name = 'favorite-city-view'
-#    template_name = 'weather/city_detail.html'
-#    User = get_user_model()
-
-    def get(self, request, *args, **kwargs):
-        user = auth.get_user(request)
-#        pk = kwargs['pk']
-        print('KKA START GET', user, 'KKA END')
-        context = {}
-        context.update(csrf(request))
-        if request.user.is_authenticated:
-            user = get_object_or_404(User, username=request.user.username)
-            print('KKA START GET', user.is_authenticated, 'KKA END')
-#           context['extra'] = 'extra'
-        else:
-            pass
-        return render_to_response(template_name='weather/city_detail.html', context=context)
-
-    def post(self, request, *args):
-#        print(kwargs)
-        user = request.user
-        print('KKA START POST',user,'KKA END')
-        pk = self.args[0]
-#        pk=int(kwargs['pk'])
-#        city = get_object_or_404(City, pk=pk)
-#        favorite = FavoriteCity.objects.filter(city__exact=pk, user__exact=user)
-#        if favorite.exists():
-#            count_deleted = favorite.delete() 
-#        else: 
-#            response = FavoriteCity.objects.create(city=city, user=user)
-        return super(FavoriteCityView, self).post(request)
-
-    def get_redirect_url(self, *args, **kwargs):
-        pass
-
-# не решено. НАдо делать через class View
-def make_favorite_city(request, pk):
-    city = City.objects.get(pk=pk)
-    user = request.user
-    favorite = FavoriteCity.objects.filter(city__exact=pk, user__exact=user)
-    if favorite.exists():
-        count_deleted = favorite.delete()
-    else:
-        response = FavoriteCity.objects.create(city=city, user=user)
-    return render('city.detail')

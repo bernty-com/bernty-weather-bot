@@ -6,17 +6,6 @@
   <div class="col-md-6 text-left">
   </div> <!-- col-md-6 text-left -->
   <div class="col-md-6 text-right">
-    <a href="{% url 'favorite-city-func' city.city_id %}">
-      <button type="button" class="btn btn-default">
-        {% if is_favorited %}
-          <span class="glyphicon glyphicon-heart"></span>
-            &nbsp;Удалить из избранного
-        {% else %}
-          <span class="glyphicon glyphicon-heart-empty"></span>
-            &nbsp;Добавить в избранное
-        {% endif %}
-      </button>
-    </a>
   </div> <!-- col-md-6 text-right -->
 </div> <!-- row -->
 <h1>
