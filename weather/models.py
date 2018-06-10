@@ -74,7 +74,7 @@ class City(models.Model):
         decimal_places=6,
         verbose_name='Широта'
         )
-    favorites = GenericRelation(Favorite)
+    favorites = GenericRelation(Favorite, related_query_name='cities')
 
     class Meta:
         ordering = ["name"]
@@ -131,7 +131,7 @@ class Forecast(models.Model):
         api_url = "http://api.openweathermap.org/data/2.5/weather"
         params = {
             'id': id,
-            'appid': '86400dcb34b136834f8f3eb6a92a59b3',
+            'appid': settings.OWM_KEY,
             'units': 'metric',
             'type': 'accurate',
             'lang': 'ru'

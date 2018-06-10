@@ -35,6 +35,7 @@ env = environ.Env(
     DATABASE_URL=str,
     ALLOWED_HOSTS=(list,['localhost','bernty.ru']),
     KKA_TEST=(str,'No test'),
+    OWM_KEY=str
 )
 
 environ.Env.read_env() # reading .env file
@@ -234,3 +235,6 @@ MESSAGE_TAGS = {
 POSITIVE_NOTATION = " Add  "
 NEGATIVE_NOTATION = "Remove"
 ALLOW_ANONYMOUS = "FALSE"
+
+# OpenWeatherMap block
+OWM_KEY = env('OWM_KEY')
