@@ -109,7 +109,7 @@ class CityDetailView(LoginRequiredMixin, DetailView):
                                     forecast.temp_min,
                                     forecast.temp_max
                                     )
-        context['google_api_key'] = 'AIzaSyBJijCLNlqansG-ZfX6hNFf-HsPnSzP26w'
+        context['google_api_key'] = settings.GOOGLE_API_KEY
         common_context = set_common_context_vars(self.request)
         context.update(common_context)
         return context

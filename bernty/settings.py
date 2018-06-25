@@ -238,3 +238,6 @@ ALLOW_ANONYMOUS = "FALSE"
 
 # OpenWeatherMap block
 OWM_KEY = env('OWM_KEY')
+
+# Google API Key
+GOOGLE_API_KEY=env('GOOGLE_API_KEY')
