@@ -45,6 +45,17 @@
     {% endif%}
   </div> <!-- col-lg-6 -->
 </div> <!-- row marketing -->
+
+<div class="row marketing">
+  <iframe 
+    width="600"
+    height="450"
+    frameborder="0"
+    style="border:0"
+    src="https://www.google.com/maps/embed/v1/view?zoom=11&center={{ fc.coord_lat }},{{ fc.coord_lon }}&key={{ google_api_key }}"
+    allowfullscreen>
+  </iframe>
+</div> <!-- row marketing -->
 <br/>
 <br/>
 по состоянию на <strong>{{fc.dt|date:"H:i T"}}</strong>

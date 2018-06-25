@@ -73,7 +73,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
@@ -84,7 +84,7 @@ LOGGING = {
         
         },
         'file': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.FileHandler',
             'filename': str(APPS_DIR)  + '/log/debug.log',
 # '/Users/KKA/Dropbox/Site/2018.bernty.ru/public_html/log/debug.log',
@@ -99,12 +99,12 @@ LOGGING = {
         'django.request': {
             'handlers': ['file', 'console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
         'django': {
             'handlers': ['file','console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
         'py.warnings': {
             'handlers': ['file','console'],

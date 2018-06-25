@@ -23,8 +23,8 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li class=""><a href="{% url 'accounts:profile'%}">Изменить профиль</a></li>
-            <li class=""><a href="{% url 'accounts:change_password'%}">Изменить пароль</a></li>
+            <li class=""><a href="{% url 'accounts:profile'%}">Профиль</a></li>
+            <li class=""><a href="{% url 'accounts:change_password'%}">Пароль</a></li>
             <li class="divider"></li>
             <li class=""><a href="{% url 'accounts:logout'%}">Выйти</a></li>
           </ul> <!-- dropdown-menu -->
@@ -45,9 +45,7 @@
           </div> <!-- col-md-6 text-left -->
           <div class="col-md-6 text-right">
             <span>
-              Ты приперся
-              {% if request.session.num_visits > 1 %} уже {% endif %}
-              в {{ request.session.num_visits }} раз
+              Ты приперся {{ is_first_time|yesno:",уже" }} в {{ num_visits }} раз
             </span>
           </div> <!-- col-md-6 text-right -->
         </div> <!-- row -->

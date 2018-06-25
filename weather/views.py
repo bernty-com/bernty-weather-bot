@@ -27,19 +27,25 @@ from django.contrib.contenttypes.models import ContentType
 CITY_PER_PAGE = 20
 
 
-def index(request):
+def set_common_context_vars(request):
     context = {}
-    # подсчет количества посещений авторизованного пользователя
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits+1
+    context['num_visits'] = request.session['num_visits']
+    context['is_first_time'] = True if context['num_visits'] == 1 else False  
     context['project_name'] = settings.PROJECT_NAME
-    
-    # вывод избранных городов (если такие есть) для аворизованого пользователя
+    return context
+
+def index(request):
+    context = {}
+    common_context = set_common_context_vars(request)
+    context.update(common_context)
+    # вывод избранных городов (если такие есть) для авторизованого пользователя
     user = request.user
     if user.is_authenticated:
 #        logged_user = User.objects.get(username=user)
         content_type_id = ContentType.objects.get(model='city')
-        c = ContentType.objects.get_for_model(City)
+#        c = ContentType.objects.get_for_model(City)
 #        print('KKA1', content_type_id)
         fav_queryset = Favorite.objects.filter(content_type=content_type_id, user__exact=user)
         l = list()
@@ -103,4 +109,7 @@ class CityDetailView(LoginRequiredMixin, DetailView):
                                     forecast.temp_min,
                                     forecast.temp_max
                                     )
+        context['google_api_key'] = 'AIzaSyBJijCLNlqansG-ZfX6hNFf-HsPnSzP26w'
+        common_context = set_common_context_vars(self.request)
+        context.update(common_context)
         return context
