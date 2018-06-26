@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import requests
+
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.shortcuts import redirect
@@ -38,8 +40,6 @@ def set_common_context_vars(request):
 
 def index(request):
     context = {}
-    common_context = set_common_context_vars(request)
-    context.update(common_context)
     # вывод избранных городов (если такие есть) для авторизованого пользователя
     user = request.user
     if user.is_authenticated:
@@ -58,6 +58,8 @@ def index(request):
         
         context['object_list'] = cities
                 
+    common_context = set_common_context_vars(request)
+    context.update(common_context)
     return render(
         request,
         'weather/lorem.html',
@@ -100,10 +102,33 @@ class CityDetailView(LoginRequiredMixin, DetailView):
     template_name = 'weather/city_detail.html'
     # login_url =  см. настройку LOGIN_URL
 
+    def get_forecast(self, id):
+        wdata = 'weatherdata' + str(id)
+        is_cached = (wdata in self.request.session)
+        
+        if not is_cached:
+            api_url = "http://api.openweathermap.org/data/2.5/weather"
+            params = {
+                'id': id,
+                'type': 'accurate',
+                'lang': 'ru',
+                'units': 'metric',
+                'appid': settings.OWM_KEY,
+            }
+            response = requests.get(api_url, params=params)
+            if response.status_code == 200:
+                self.request.session[wdata] = response.json()
+
+# сессионные куки работают, но не закрыт вопрос с их устареванием и удалением
+
+        weatherdata = self.request.session[wdata]
+        return weatherdata
+
     def get_context_data(self, **kwargs):
         context = super(CityDetailView, self).get_context_data(**kwargs)
         pk = self.kwargs.get(self.pk_url_kwarg, None)
-        forecast = Forecast(pk)
+        weatherdata = self.get_forecast(pk)
+        forecast = Forecast(weatherdata)
         context['fc'] = forecast
         context['min_max'] = min_max_temperature(
                                     forecast.temp_min,

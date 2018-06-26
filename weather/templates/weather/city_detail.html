@@ -27,8 +27,7 @@
     <h4>долгота дня</h4>
     <p>{{fc.duration}}</p>
     <h4>координаты</h4>
-    <p><a 
-             href="http://maps.google.com/maps?q={{fc.coord_lat}},{{fc.coord_lon}}  ">{{fc.lat}}<br>{{fc.lon}}</a></p>
+    <p>{{fc.lat}}<br>{{fc.lon}}</p>
   </div> <!-- col-lg-6 -->
   <div class="col-lg-6">
     <h4>ветер</h4>
@@ -52,7 +51,7 @@
     height="450"
     frameborder="0"
     style="border:0"
-    src="https://www.google.com/maps/embed/v1/view?zoom=11&center={{ fc.coord_lat }},{{ fc.coord_lon }}&key={{ google_api_key }}"
+    src="https://www.google.com/maps/embed/v1/view?zoom=11&center={{fc.coord_lat}},{{fc.coord_lon}}&key={{google_api_key}}"
     allowfullscreen>
   </iframe>
 </div> <!-- row marketing -->

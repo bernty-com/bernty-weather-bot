@@ -126,24 +126,8 @@ class Forecast(models.Model):
     class Meta:
         abstract = True
 
-    def get_forecast(self, id):
-        import requests
-        api_url = "http://api.openweathermap.org/data/2.5/weather"
-        params = {
-            'id': id,
-            'appid': settings.OWM_KEY,
-            'units': 'metric',
-            'type': 'accurate',
-            'lang': 'ru'
-        }
-        res = requests.get(api_url, params=params)
-        data = None
-        if res.status_code == 200:
-            data = res.json()
-        return data
-
-    def __init__(self, id):
-        d = self.get_forecast(id)
+    def __init__(self, data):
+        d = data
         self.coord_lon = str(d['coord']['lon']).replace(',', '.')
         self.coord_lat = str(d['coord']['lat']).replace(',', '.')
         self.lon = coordinate(d['coord']['lon'], 'lon')
