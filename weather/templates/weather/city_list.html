@@ -3,7 +3,7 @@
 {% load favorite_tags %}
 {% load static %}
 {% block content %}
-{% if city_lists %}
+{% if object_list %}
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h4>Ты с какова горада?</h4>
@@ -48,7 +48,7 @@
   {% endif %}
   {% else %}
     <div>
-      <span>Не найдено ни одного города. Тщательнее надо!</span>
+      <span>Не найдено ни одного города. Еще более тщательнее надо!</span>
     </div>
 {% endif %}
 {% endblock %}

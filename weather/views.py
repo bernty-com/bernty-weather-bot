@@ -26,6 +26,12 @@ from .model_func import min_max_temperature
 
 from django.contrib.contenttypes.models import ContentType
 
+from pyowm import OWM
+
+from django_pyowm.models import Weather as djWeather
+from django_pyowm.models import Location as djLocation
+from django_pyowm.models import Observation as djObservation
+
 CITY_PER_PAGE = 20
 
 
@@ -43,18 +49,12 @@ def index(request):
     # вывод избранных городов (если такие есть) для авторизованого пользователя
     user = request.user
     if user.is_authenticated:
-#        logged_user = User.objects.get(username=user)
         content_type_id = ContentType.objects.get(model='city')
-#        c = ContentType.objects.get_for_model(City)
-#        print('KKA1', content_type_id)
         fav_queryset = Favorite.objects.filter(content_type=content_type_id, user__exact=user)
         l = list()
         for f in fav_queryset:
             l.append(f.object_id)
-#            print('KKA-2', f.object_id) 
         cities = City.objects.filter(id__in=l)
-#        f2 = Favorite.objects.filter(cities__user=user)
-#        print('KKA3',f2)
         
         context['object_list'] = cities
                 
@@ -68,15 +68,18 @@ def index(request):
 
 
 class CityView(LoginRequiredMixin, ListView):
+    model = djLocation
     template_name = 'weather/city_list.html'
-    context_object_name = 'city_lists'
-    paginate_by = CITY_PER_PAGE
+    context_object_name = 'object_list'
+    paginate_by = CITY_PER_PAGE  # кол-во элементов на страницу
 
     def get_queryset(self):
+        q_country = self.request.GET.get('country')
+        if len(q_country) == 0:
+            q_country = None 
         q = self.request.GET.get('city')
-        if q is None:
-            # Если пользователь оставил поле поиска пустым
-            return City.objects.all()
+        if len(q) == 0:
+            return None
         else:
             # если запрос содержит точку в конце,
             # то требуется точное соответствие
@@ -84,16 +87,49 @@ class CityView(LoginRequiredMixin, ListView):
             # ищем сначала русское название, если не находим, тогда английское
             if q[-1:] == '.':
                 q = q[:-1]
-                queryset_local = City.objects.filter(local_name__iexact=q)
-                queryset_native = City.objects.filter(name__iexact=q)
+                matching = 'nocase'
+                queryset = City.objects.filter(name__iexact=q)
             else:
-                queryset_local = City.objects.filter(local_name__icontains=q)
-                queryset_native = City.objects.filter(name__icontains=q)
-            if queryset_local.exists():
-                queryset = queryset_local
+                matching = 'like'
+                queryset = City.objects.filter(name__icontains=q)
+
+            locations = self.pyowm_get_city(q, q_country, matching)
+        return queryset
+
+    def get_queryset_new(self):
+        q_country = self.request.GET.get('country')
+        if len(q_country) == 0:
+            q_country = None 
+        q_city = self.request.GET.get('city')
+        if len(q_city) == 0:
+            return None
+        else:
+            # если запрос содержит точку в конце,
+            # то требуется точное соответствие
+            # иначе используем все вхождения
+            if q_city[-1:] == '.':
+                q_city = q_city[:-1]
+                matching = 'nocase'
             else:
-                queryset = queryset_native
-            return queryset
+                matching = 'like'
+            locations = self.pyowm_get_city(q_city, q_country, matching)
+            return locations
+
+    def pyowm_get_city(self, city, country, matching='nocase'):
+        owm = OWM(API_key=settings.OWM_KEY, language='ru')
+        # функция обращается к локальному хранилищу городов в zip-файле
+        reg = owm.city_id_registry()
+        city_list = reg.locations_for(city_name=city, country=country, matching=matching)
+        
+        # и сохраняет в БД результаты поиска
+        for c in city_list:
+            l = djLocation.from_entity(c)
+            if not djLocation.objects.filter(city_id=l.city_id).exists():
+                l.save()
+                print('KKA START', l.city_id, l.name, 'saved')
+            else:
+                print('KKA START', l.city_id, l.name, 'NOT saved')
+        return city_list
 
 
 class CityDetailView(LoginRequiredMixin, DetailView):
@@ -102,6 +138,7 @@ class CityDetailView(LoginRequiredMixin, DetailView):
     template_name = 'weather/city_detail.html'
     # login_url =  см. настройку LOGIN_URL
 
+# сессионные куки работают, но не закрыт вопрос с их устареванием и удалением
     def get_forecast(self, id):
         wdata = 'weatherdata' + str(id)
         is_cached = (wdata in self.request.session)
@@ -119,15 +156,26 @@ class CityDetailView(LoginRequiredMixin, DetailView):
             if response.status_code == 200:
                 self.request.session[wdata] = response.json()
 
-# сессионные куки работают, но не закрыт вопрос с их устареванием и удалением
+        return self.request.session[wdata]
 
-        weatherdata = self.request.session[wdata]
-        return weatherdata
+    def pyowm_get_weather(self, id):
+        owm = OWM(API_key=settings.OWM_KEY,language='ru')
+        if owm.is_API_online():
+            observation = owm.weather_at_id(id) 
+            weather = observation.get_weather()
+            location = observation.get_location()
+            w = Weather.from_entity(weather).save()
+#  огрубляет данные координат до 2 знаков после запятой почему-то
+#            l = Location.from_entity(location).save()
+            o = djObservation.from_entity(observation).save()
+
+        return weather
 
     def get_context_data(self, **kwargs):
         context = super(CityDetailView, self).get_context_data(**kwargs)
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         weatherdata = self.get_forecast(pk)
+        pyowmdata = self.pyowm_get_weather(int(pk))
         forecast = Forecast(weatherdata)
         context['fc'] = forecast
         context['min_max'] = min_max_temperature(
@@ -138,3 +186,6 @@ class CityDetailView(LoginRequiredMixin, DetailView):
         common_context = set_common_context_vars(self.request)
         context.update(common_context)
         return context
+        
+class StationDetailView(LoginRequiredMixin, DetailView):
+    pass

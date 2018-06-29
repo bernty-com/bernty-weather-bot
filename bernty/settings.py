@@ -131,6 +131,7 @@ THIRD_PARTY_APPS = [
     'telegrambot',
     'rest_framework',
     'fav',
+    'django_pyowm',
 ]
 LOCAL_APPS = [
     'common',

@@ -83,6 +83,7 @@ class City(models.Model):
 
     def get_absolute_url(self):
         return reverse('city.detail', args=[str(self.id)])
+#        return reverse('station.detail', args=[str(self.id)])
 
     def get_city_id(self):
         return self.city_id

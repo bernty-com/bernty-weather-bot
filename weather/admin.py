@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_text
 
 from .models import Country, City
+from django_pyowm.models import Weather, Location
 
 class HemisphereFilter(admin.SimpleListFilter):
     # Human-readable title which will be displayed in the
@@ -85,3 +86,6 @@ class CityAdmin(admin.ModelAdmin):
 # Register the admin class with the associated model
 admin.site.register(City,CityAdmin)
 admin.site.register(Country, CountryAdmin)
+admin.site.register(Location)
+admin.site.register(Weather)
+
